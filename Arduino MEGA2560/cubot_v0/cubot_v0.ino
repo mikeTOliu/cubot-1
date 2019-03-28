@@ -1,5 +1,5 @@
 #include <Stepper.h>
-#include <String.h>
+//#include <String.h>
 using namespace std;
 //R1L3F2B2R1L3U1L1R3B2F2L1R3=D
 /*
@@ -7,10 +7,10 @@ using namespace std;
 All the parameters below are well-adjusted. Please don't change anything except time.
 
 */
-const int STEPS = 205;              // 360/1.8
-const int stepperSpeed = 240;       // rpm  15.8V 
+const int STEPS = 208;              // 360/1.8
+const int stepperSpeed = 180;       // rpm  15.8V 
 const int timeBetweenMoves = 5;     // ms    between U2 R2 or U R etc.
-const int timeBetweenComs = 1000*8; // ms    between commands
+const int timeBetweenComs = 1000*3; // ms    between commands
 const int steps_90 = 3*STEPS/4 ;     
 const int steps_180 = STEPS/2;
 const int steps_270 = STEPS/4;   
@@ -21,12 +21,12 @@ const int _angle[4]={0,steps_90,steps_180,steps_270};
 String command = "";
 
 // adjust them according to your wiring
-Stepper FF(STEPS,28,29,30,31);
-Stepper DD(STEPS,22,23,24,25);
-Stepper BB(STEPS,34,35,36,37);
-Stepper LL(STEPS,38,39,40,41);
-Stepper UU(STEPS,44,45,46,47);
-Stepper RR(STEPS,50,51,52,53);
+Stepper FF(211,28,29,30,31);
+Stepper DD(212,22,23,24,25);
+Stepper BB(206,34,35,36,37);
+Stepper LL(206,38,39,40,41);
+Stepper UU(205,44,45,46,47);
+Stepper RR(208,50,51,52,53);
 
 void Getcom();
 void Solve();
@@ -42,19 +42,22 @@ void setup()
 
     pinMode(13,OUTPUT);
 }
-
+int i = 1;
 void loop()
 {
+  if(i){
+    i = 0;
     delay(timeBetweenComs);
     command = "";
     Getcom();
+  }
 }
 
 // I was going to implement a funtion to receive solutions from serial monitor but did not manage to do so.
 // I just simply paste the solution here and upload the code.
 void Getcom() 
 {    
-    command = "U2F2L2D2B2U2F2L2F2R2F2U1L2R2F2U3B2U1L2U3R1U3D2F2R1D2U1F1U1B1R3L2U3";
+    command = "U1D3F1L1B3R3B2U1D1B2R2D3L3R2U2B2U3R2U1L2F2U2F2R2D2F2L2U2F2R2U2";
     
     Solve();
 }
@@ -63,6 +66,7 @@ void Solve()
 {
     int com_len=command.length();
     for(int i=0;i<com_len;i+=2)
+    //for(int i=com_len-2;i>=0;i-=2)
     {
         char ch=command[i];
         int n=command[i+1]-'0';
@@ -87,5 +91,3 @@ void Solve()
     }
     
 }
-
-
